@@ -1,0 +1,35 @@
+name: Docker Build and Upload to JFrog Artifactory
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Docker image
+      run: |
+        docker buildx create --use
+        docker buildx build --platform linux/amd64 -t your-docker-repo/image-name:latest .
+
+    - name: Set up JFrog CLI
+      uses: jfrog/setup-jfrog-cli@v1
+      with:
+        jfrog-cli-version: latest
+
+    - name: Upload Docker image to JFrog Artifactory
+      env:
+        JFROG_CLI_HOME: /home/runner/jfrog
+        JFROG_CLI_OFFER_CONFIG: false
+      run: |
+        jfrog rt c --url https://your-artifactory-url/artifactory --user ${{ secrets.JFROG_USERNAME }} --password ${{ secrets.JFROG_PASSWORD }}
+        jfrog rt docker-push your-docker-repo/image-name:latest docker-local-repo
