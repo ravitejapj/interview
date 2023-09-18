@@ -35,7 +35,7 @@ jobs:
         jfrog config add devops-artifactory \
           --artifactory-url https://devopscloud592.jfrog.io/artifactory \
           --user ${{ secrets.JFROG_USERNAME }} \
-          --password ${{ secrets.JFROG_PASSWORD }}
+          --password ${{ secrets.JFROG_PASSWORD }} \
           --url https://devopscloud592.jfrog.io/
 
     - name: Upload Docker image to JFrog Artifactory
