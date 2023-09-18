@@ -19,7 +19,7 @@ jobs:
     - name: Build Docker image
       run: |
         docker buildx create --use
-        docker buildx build --platform linux/amd64 -t  nodejs:v2 .
+        docker buildx build --platform linux/amd64 -t  nodejs:v2 --push .
         
     - name: Tag Docker image for JFrog Artifactory
       run: |
