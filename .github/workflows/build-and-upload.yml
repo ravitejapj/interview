@@ -16,6 +16,15 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
+    - name: Build Docker image
+      run: |
+        docker buildx create --use
+        docker buildx build --platform linux/amd64 -t nodejs:v2 .
+
+    - name: Tag Docker image for JFrog Artifactory
+      run: |
+        docker tag nodejs:v2 devopscloud592.jfrog.io/docker/nodejs:v2
+
     - name: Set up JFrog CLI
       uses: jfrog/setup-jfrog-cli@v1
       with:
@@ -23,20 +32,11 @@ jobs:
 
     - name: Configure JFrog CLI
       run: |
-        jfrog config add devopscloud592.jfrog.io \
+        jfrog config add devops-artifactory \
           --artifactory-url https://devopscloud592.jfrog.io/artifactory \
           --user ${{ secrets.JFROG_USERNAME }} \
           --password ${{ secrets.JFROG_PASSWORD }}
-      
-    #- name: Docker Login to JFrog Artifactory
-    #  run: |
-    #    jfrog rt login devopscloud592.jfrog.io
 
-    - name: Build Docker image
-      run: |
-        docker buildx create --use
-        docker buildx build --platform linux/amd64 -t nodejs:v2 --push .
-        
     - name: Upload Docker image to JFrog Artifactory
       env:
         JFROG_CLI_HOME: /home/runner/jfrog
