@@ -39,8 +39,14 @@ jobs:
           --url https://devopscloud592.jfrog.io/
 
     - name: Upload Docker image to JFrog Artifactory
+      uses: jfrog/setup-jfrog-cli@v3
       env:
-        JFROG_CLI_HOME: /home/runner/jfrog
-        JFROG_CLI_OFFER_CONFIG: false
-      run: |
-        jf docker push devopscloud592.jfrog.io/docker/nodejs:v2 
+    # JFrog platform url (for example: https://acme.jfrog.io) 
+        JF_URL: "https://devopscloud592.jfrog.io/"    
+    # Basic authentication credentials
+        JF_USER: ${{ secrets.JFROG_USERNAME }}
+        JF_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+
+    - run: |
+        jf rt ping
+        jf docker push devopscloud592.jfrog.io/docker/nodejs:v2
