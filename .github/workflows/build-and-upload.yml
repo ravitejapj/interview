@@ -50,3 +50,24 @@ jobs:
     - run: |
         jf rt ping
         jf docker push devopscloud592.jfrog.io/docker/nodejs:v2
+
+    - name : Run postgress docker contaner 
+      run: |
+       docker run --name postgres-db \
+         -e DB_USER=postgres \
+         -e DB_PASS=password \
+         -e DB_HOST=localhost \
+         -e DB_NAME=postgres \
+         -d -p 5432:5432 postgres  
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+    - name: Install dependencies
+      run: npm install  
+    - name: Start Node.js Application
+      run: npm start
+    - name: Health Check
+      run: |
+        sleep 10 
+        curl -f http://localhost:3000/db_healthcheck || exit 1  
