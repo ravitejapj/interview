@@ -19,17 +19,23 @@ jobs:
     - name: Build Docker image
       run: |
         docker buildx create --use
-        docker buildx build --platform linux/amd64 -t your-docker-repo/image-name:latest .
+        docker buildx build --platform linux/amd64 -t  devopscloud592.jfrog.io/lendbuzz/nodejs:latest .
 
     - name: Set up JFrog CLI
       uses: jfrog/setup-jfrog-cli@v1
       with:
         jfrog-cli-version: latest
 
+    - name: Configure JFrog CLI
+      run: |
+        jfrog config add devops-artifactory \
+          --artifactory-url https://devopscloud592.jfrog.io/artifactory/docker \
+          --user ${{ secrets.JFROG_USERNAME }} \
+          --password ${{ secrets.JFROG_PASSWORD }}
+
     - name: Upload Docker image to JFrog Artifactory
       env:
         JFROG_CLI_HOME: /home/runner/jfrog
         JFROG_CLI_OFFER_CONFIG: false
       run: |
-        jfrog rt c --url https://your-artifactory-url/artifactory --user ${{ secrets.JFROG_USERNAME }} --password ${{ secrets.JFROG_PASSWORD }}
-        jfrog rt docker-push your-docker-repo/image-name:latest docker-local-repo
+        jfrog rt docker-push devopscloud592.jfrog.io/lendbuzz/nodejs:latest docker-local-repo
