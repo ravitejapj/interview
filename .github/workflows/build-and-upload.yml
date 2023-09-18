@@ -43,4 +43,4 @@ jobs:
         JFROG_CLI_HOME: /home/runner/jfrog
         JFROG_CLI_OFFER_CONFIG: false
       run: |
-        jfrog rt docker-push devopscloud592.jfrog.io/docker/nodejs:v2 docker-local-repo
+        jf docker push devopscloud592.jfrog.io/docker/nodejs:v2 
