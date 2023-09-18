@@ -28,9 +28,9 @@ jobs:
           --user ${{ secrets.JFROG_USERNAME }} \
           --password ${{ secrets.JFROG_PASSWORD }}
       
-    - name: Docker Login to JFrog Artifactory
-      run: |
-        jfrog rt login devopscloud592.jfrog.io
+    #- name: Docker Login to JFrog Artifactory
+    #  run: |
+    #    jfrog rt login devopscloud592.jfrog.io
 
     - name: Build Docker image
       run: |
