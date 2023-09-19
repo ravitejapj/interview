@@ -51,35 +51,29 @@ jobs:
         jf rt ping
         jf docker push devopscloud592.jfrog.io/docker/nodejs:v2
 
-    # - name : Run postgress docker contaner 
-    #   run: |
-    #    docker run --name postgres-db \
-    #    --detach \
-    #    --publish 5432:5432 \
-    #    --volume /var/lib/postgresql/data \
-    #    --env POSTGRES_USER=postgres \
-    #    --env POSTGRES_PASSWORD=password \
-    #    --env POSTGRES_HOST=localhost \
-    #    --env POSTGRES_DB=postgres \
-    #    postgres 
-    #    until docker exec postgres-db pg_isready -h localhost -U postgres; do
-    #      sleep 1
-    #    done   
+    - name : Run postgress docker contaner 
+      run: |
+        docker run --name postgres-db \
+        --detach \
+        --publish 5432:5432 \
+        --volume /var/lib/postgresql/data \
+        --env POSTGRES_USER=postgres \
+        --env POSTGRES_PASSWORD=password \
+        --env POSTGRES_HOST=localhost \
+        --env POSTGRES_DB=postgres \
+        postgres 
+        until docker exec postgres-db pg_isready -h localhost -U postgres; do
+          sleep 1
+        done   
     - name: Set up Node.js
       uses: actions/setup-node@v2  
       with:
         node-version: 14
     - name: Install dependencies
       run: npm install  
-    - name: Start Docker Compose
-      run: docker-compose up -d
-    - name: Wait for PostgreSQL to Be Ready
-      run: |
-        until docker exec node-app pg_isready -h postgres -U postgres; do
-          sleep 1
-        done  
+    
     - name: Start Node.js Application
-      run: npm start
+      run: npm start&
     - name: Health Check
       run: |
         sleep 10 
