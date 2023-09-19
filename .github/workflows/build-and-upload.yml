@@ -54,11 +54,14 @@ jobs:
     - name : Run postgress docker contaner 
       run: |
        docker run --name postgres-db \
-         -e DB_USER=postgres \
-         -e DB_PASS=password \
-         -e DB_HOST=localhost \
-         -e DB_NAME=postgres \
-         -d -p 5555:5432 postgres 
+       --detach \
+       --publish 5432:5432 \
+       --volume /var/lib/postgresql/data \
+       --env DB_USER=postgres \
+       --env DB_PASS=password \
+       --env DB_HOST=localhost \
+       --env DB_NAME=postgres \
+       postgres 
        until docker exec postgres-db pg_isready -h localhost -U postgres; do
          sleep 1
        done   
