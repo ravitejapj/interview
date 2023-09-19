@@ -58,7 +58,10 @@ jobs:
          -e DB_PASS=password \
          -e DB_HOST=localhost \
          -e DB_NAME=postgres \
-         -d -p 5432:5432 postgres  
+         -d -p 5432:5432 postgres 
+       until docker exec postgres-db pg_isready -h localhost -U postgres; do
+         sleep 1
+       done   
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
